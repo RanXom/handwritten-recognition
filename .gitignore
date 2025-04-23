@@ -1,0 +1,3 @@
+# Ignore env and datasets
+/backend/env/
+/backend/datasets/
