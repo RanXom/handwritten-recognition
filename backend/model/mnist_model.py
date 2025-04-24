@@ -1,11 +1,11 @@
 import numpy as np
 
 def init_params():
-    # Subtract 0.5 from each parameter to keep the range b/w -0.5 to +0.5
-    W1 = np.random.rand(10,784) - 0.5
+    # Subtract 0.5 from each para. to keep the range b/w -0.5 to +0.5
+    W1 = np.random.rand(10, 784) - 0.5
     b1 = np.random.rand(10, 1) - 0.5
-    W2 = np.random.rand(10, 784) - 0.5
-    b2 = np.random.rand(10, 784) - 0.5
+    W2 = np.random.rand(10, 10) - 0.5
+    b2 = np.random.rand(10, 1) - 0.5
     return W1, b1, W2, b2
 
 def ReLU(Z):
@@ -21,12 +21,12 @@ def one_hot_encode(Y):
     one_hot = one_hot.T
     return one_hot
 
-def derivatiive_ReLU(Z):
+def derivative_ReLU(Z):
     return Z > 0
 
 def forward_propogation(W1, b1, W2, b2, X):     # X is A0
     Z1 = W1.dot(X) + b1
-    A1 = RelU(Z1)
+    A1 = ReLU(Z1)
     Z2 = W2.dot(A1) + b2
     A2 = softmax(Z2)
     return Z1, A1, Z2, A2
