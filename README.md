@@ -1,118 +1,96 @@
+# Handwriting Recognition System
 
-# Handwritten Digit Recognition (0–9) System
+This is a handwriting recognition system that uses a neural network trained on the MNIST dataset to recognize handwritten digits from 0-9.
 
-This project is a handwritten digit recognition system that uses a simple neural network built from scratch using only `numpy` and basic math (no ML libraries like TensorFlow or PyTorch). It uses the MNIST dataset and predicts digits (0–9) based on an image uploaded by the user via a frontend interface.
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 handwriting-recognition/
-├── frontend/
-│   └── placeholder.md        # Placeholder for frontend files
-├── backend/
-│   ├── notebooks/
-│   │   └── Handwritten_Recognition.ipynb  # Jupyter notebook with model training and testing
-│   ├── dataset/              # Contains MNIST training and testing CSV files
-│   └── env/                  # Python virtual environment (not versioned)
-├── .gitignore
-└── README.md
+├── frontend/              # Frontend code
+│   ├── public/            # Static files
+│   │   ├── index.html     # Main HTML page
+│   │   ├── style.css      # CSS styles
+│   │   └── assets/        # Images and other assets
+│   └── src/
+│       └── app.js         # Frontend JavaScript
+├── backend/               # Backend code
+│   ├── app.py             # Main Flask application
+│   ├── model/             # Neural network model
+│   │   ├── __init__.py    # Init File
+│   │   ├── mnist_model.py # Neural network implementation
+│   │   └── trained_params.npz # Pre-trained model parameters (generated)
+│   ├── datasets/          # Training and test datasets
+│   │   ├── mnist_train.csv
+│   │   └── mnist_test.csv
+│   ├── notebook/
+│   │   └── Handwriting_Recognition.ipynb # Original notebook
+│   ├── utils/             # Utility functions
+│   │   ├── __init__.py
+│   │   └── preprocessing.py # Image preprocessing
+│   ├── requirements.txt   # Python dependencies
+│   ├── train_model.py     # Script to train and save model
+│   └── Dockerfile         # For containerization
+└── README.md              # This file
 ```
 
----
+## Setup and Installation
 
-## 💻 Setup Instructions
+### Prerequisites
+- Python 3.9+
+- pip package manager
 
-### ✅ Prerequisites
+### Backend Setup
+1. Navigate to the backend directory:
+   ```
+   cd backend
+   ```
 
-- Python 3.8+
-- `pip`
-- Kaggle account + `kaggle.json` API token
-- Git (optional, for cloning)
+2. Install required dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
 
----
+3. Train the model (this needs to be done only once):
+   ```
+   python train_model.py
+   ```
 
-### 🧪 Setting Up the Backend
+4. Start the Flask server:
+   ```
+   python app.py
+   ```
 
-#### 1. Clone the repository (or download manually)
-
-```bash
-git clone https://github.com/your-username/handwriting-recognition.git
-cd handwriting-recognition/backend
+### Frontend
+The frontend is served by the Flask application. Once the backend server is running, 
+you can access the application by navigating to:
+```
+http://localhost:5000
 ```
 
-#### 2. Create a virtual environment
+## Using the Application
+1. Draw a digit (0-9) on the canvas
+2. Click the "Predict" button to see the recognition result
+3. Alternatively, upload an image of a handwritten digit
 
-**Linux/macOS:**
+## Docker Setup (Optional)
+If you prefer to use Docker:
 
-```bash
-python3 -m venv env
-source env/bin/activate
-```
+1. Build the Docker image:
+   ```
+   docker build -t handwriting-recognition -f backend/Dockerfile .
+   ```
 
-**Windows (CMD):**
+2. Run the Docker container:
+   ```
+   docker run -p 5000:5000 handwriting-recognition
+   ```
 
-```cmd
-python -m venv env
-env\Scripts\activate
-```
+3. Access the application at:
+   ```
+   http://localhost:5000
+   ```
 
-**Windows (PowerShell):**
-
-```powershell
-python -m venv env
-.\env\Scripts\Activate.ps1
-```
-
-#### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-#### 4. Get the MNIST CSV dataset from Kaggle
-- Download `kaggle.json` file from your kaggle account:
-	- Go to your account, Scroll to API section and Click Expire API Token to remove previous tokens
-	- Click on Create New API Token - It will download kaggle.json file on your machine.
-	
-- Place your `kaggle.json` in the `backend` folder.
-- **For windows users:** While being in the backend folder, right click on any blank area and click on `Open in Terminal`.
-- Then run the following:
-
-> On **Windows**, instead of `cp`, `chmod`, and `mv`, use these:
-```cmd
-copy kaggle.json %USERPROFILE%\.kaggle\
-kaggle datasets download -d oddrationale/mnist-in-csv
-tar -xf mnist-in-csv.zip
-mkdir dataset
-move mnist_train.csv dataset\
-move mnist_test.csv dataset\
-```
-
-> On Linux/MacOS, run these:
-```bash
-mkdir -p ~/.kaggle
-cp kaggle.json ~/.kaggle/
-chmod 600 ~/.kaggle/kaggle.json
-kaggle datasets download -d oddrationale/mnist-in-csv
-unzip mnist-in-csv.zip
-mkdir -p dataset
-mv mnist_train.csv mnist_test.csv dataset/
-```
-
----
-
-### 📓 Run the Notebook
-
-Once everything is set up:
-
-```bash
-jupyter notebook
-```
-
-Then navigate to `notebooks/Handwritten_Recognition.ipynb` and run all cells to train/test the model.
-
-## 👨‍💻 Author
-
-Made with ❤️ by **Saiyed Shizain**. Inspired by classic deep learning exercises.
+## Model Details
+- The neural network is implemented from scratch using NumPy
+- The model consists of a 2-layer neural network with ReLU and Softmax activations
+- The model achieves approximately 85.4% accuracy on the validation set
