@@ -3,5 +3,14 @@
 /backend/datasets/
 /backend/debug/
 
+# Ingore pycache
+__pycache__/
+*.pyc
+
+.DS_Store
+
 # Ignore ipynb checkpoints
 /backend/.ipynb_checkpoints
+
+# Do NOT ignore the trained model parameters
+!backend/model/trained_params.npz
