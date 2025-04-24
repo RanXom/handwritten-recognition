@@ -56,6 +56,8 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.beginPath();
             ctx.moveTo(lastX || canvasX, lastY || canvasY);
             ctx.lineTo(canvasX, canvasY);
+            ctx.lineWidth = 20;  
+            ctx.strokeStyle = 'white';  
             ctx.stroke();
             
             lastX = canvasX;

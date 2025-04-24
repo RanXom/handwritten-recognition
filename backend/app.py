@@ -44,11 +44,9 @@ def test_with_mnist():
     except Exception as e:
         print(f"Error testing MNIST samples: {e}")
 
-# Call this after loading params
 if W1 is not None:
     test_with_mnist()
 
-# Add this to the top of app.py after loading params
 if W1 is not None:
     print(f"W1 shape: {W1.shape}")
     print(f"b1 shape: {b1.shape}")
@@ -109,4 +107,5 @@ def predict():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
