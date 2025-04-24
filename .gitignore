@@ -1,6 +1,7 @@
 # Ignore env and datasets
 /backend/env/
 /backend/datasets/
+/backend/debug/
 
 # Ignore ipynb checkpoints
 /backend/.ipynb_checkpoints
