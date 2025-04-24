@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handwritten Digit Recognition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Handwritten Digit Recognition</h1>
+        
+        <div class="canvas-container">
+            <canvas id="drawingCanvas" width="280" height="280"></canvas>
+            <div class="controls">
+                <button id="clearButton">Clear</button>
+                <button id="recognizeButton">Recognize</button>
+            </div>
+        </div>
+        
+        <div class="result-container">
+            <h2>Prediction: <span id="prediction">-</span></h2>
+        </div>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <p>1. Draw a digit (0-9) in the canvas above.</p>
+            <p>2. Click "Recognize" to get the prediction.</p>
+            <p>3. Use "Clear" to reset the canvas.</p>
+        </div>
+    </div>
+    
+    <script src="../src/app.js"></script>
+</body>
+</html>
