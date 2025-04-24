@@ -2,3 +2,8 @@ numpy
 pandas
 matplotlib
 jupyter
+flask
+flask-cors
+opencv-python
+pillow
+gunicorn
