@@ -1,18 +1,11 @@
-# backend/Dockerfile
 FROM python:3.9-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY ./backend /app
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+EXPOSE 5000
 
-# Train the model on container startup if needed
-RUN python train_model.py
-
-# Expose the port
-EXPOSE $PORT
-
-# Run with gunicorn
-CMD gunicorn --bind 0.0.0.0:$PORT app:app
+CMD ["python", "app.py"]
