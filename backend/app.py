@@ -1,59 +1,56 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 import numpy as np
 import cv2
 import base64
+from PIL import Image
 import io
-from PIL import image
+from utils.preprocessing import preprocess_image
+from model.mnist_model import make_prediction
 import os
 
-from model.mnist_model import MNISTModel
-from utils.preprocessing import preprocess_image
+app = Flask(__name__, static_folder='../frontend/public')
 
-app = Flask(__name__)
-CORS(app)   # Enable CORS for all routes
+# Load trained parameters
+try:
+    params = np.load('./model/trained_params.npz')
+    W1 = params['W1']
+    b1 = params['b1']
+    W2 = params['W2']
+    b2 = params['b2']
+    print("Model parameters loaded successfully!")
+except Exception as e:
+    print(f"Error loading model parameters: {e}")
+    print("Please run train_model.py first to generate the model parameters")
+    W1, b1, W2, b2 = None, None, None, None
 
-# Initialize and load model
-model = MNISTModel()
-model_path = os.path.join(os.path.dirname(__file__), 'model', 'trained_params.npz')
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
-# Check if trained model exists otherwise train a new one
-if os.path.exists(model_path):
-    model.load_model(model_path)
-    print("Loaded pre-trained model")
-else:
-    print("No pre-trained model found. Please run training script first.")
-
-@app.route('/predict', method=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
-    if 'image' not in request.json:
-        return jsonify({'error': 'No image provided'}), 400
+    if W1 is None or b1 is None or W2 is None or b2 is None:
+        return jsonify({'error': 'Model parameters not loaded. Run train_model.py first.'}), 500
     
     try:
         # Get image data from request
-        image_data = request.json['image']
-
-        # Remove data URL prefix if present
-        if 'data:image' in image_data:
-            image_data = image_data.split(',')[1]
-
+        image_data = request.json.get('image')
+        
         # Decode base64 image
-        image_bytes = base64.b64decode(image_data)
-        image = Image.open(io.BytesIO(image_bytes))
-
-        # Convert PIL image to numpy array
-        image_np = np.array(image)
-
-        # Preprocess image
-        processed_image = preprocess_image(image_np)
-
+        encoded_data = image_data.split(',')[1]
+        nparr = np.frombuffer(base64.b64decode(encoded_data), np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        
+        # Preprocess the image
+        processed_image = preprocess_image(img)
+        
         # Make prediction
-        prediction = int(model.predict(processed_image)[0])
+        prediction = int(make_prediction(processed_image, W1, b1, W2, b2)[0])
+        
+        return jsonify({'prediction': prediction})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
-        return jsonify({
-            'error': str(e),
-            'success': False
-        }), 500
-
-if __name__ = '__main__':
-    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
